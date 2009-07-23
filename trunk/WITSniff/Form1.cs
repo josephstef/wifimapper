@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Net;
 using System.Media;
 using System.Text.RegularExpressions;
-using SpeechLib;
-using MySql.Data.MySqlClient;
-using SharpGis.SharpGps;
+using System.Threading;
+
 using NativeWifi;
+using SharpGis.SharpGps;
 
 namespace WITSniff
 {
@@ -662,7 +660,7 @@ namespace WITSniff
                     }
 
                     Networks[NetworkIndex, 0] = "N/A";
-                    Networks[NetworkIndex, 1] = GetStringForSSID(network.dot11Ssid);
+                    Networks[NetworkIndex, 1] = Utilities.GetStringForSSID(network.dot11Ssid);
                     Networks[NetworkIndex, 2] = "0";
                     Networks[NetworkIndex, 3] = network.wlanSignalQuality.ToString() + "%";
                     Networks[NetworkIndex, 4] = auth;
@@ -700,7 +698,7 @@ namespace WITSniff
                     string logData;
 
                     //Get the coordinates
-                    coords = convertCoords(lblGPGGAPosition.Text);
+                    coords = Utilities.convertCoords(lblGPGGAPosition.Text);
 
                     //Begin to read log file
                     StreamReader reader = new StreamReader(Properties.Settings.Default.logFileLocation);
@@ -761,7 +759,7 @@ namespace WITSniff
                 string[] coords = new string[2];
 
                 //Calculate Latitude and Longitude
-                coords = convertCoords(lblGPGGAPosition.Text);
+                coords = Utilities.convertCoords(lblGPGGAPosition.Text);
 
                 //Generate Post data
                 postData = "lat=" + coords[0] +
@@ -786,7 +784,16 @@ namespace WITSniff
                     OutputUpdateCallback(messageText); //call directly
 
                 //Send to site
-                pushDataToSite(postData);
+                string url = Properties.Settings.Default.webURL + postData;
+                if (!wifiMapper.SendToWebsite(url, postData))
+                {
+                    messageText = DateTime.Now + " - Scanner: ERROR - An error occured while trying to send the data to the website.\r\n";
+                    if (txtLog.InvokeRequired)
+                        txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
+                        new object[] { messageText });
+                    else
+                        OutputUpdateCallback(messageText); //call directly
+                }
             }
         }
         //*Send local log to website
@@ -875,141 +882,14 @@ namespace WITSniff
         }
         #endregion
 
-        #region Utilities
-        /// <summary>
-        /// Send data to site that is set in the settings of the application
-        /// </summary>
-        /// <param name="postData"></param>
-        private void pushDataToSite(string postData)
-        {
-            string url = Properties.Settings.Default.webURL + postData;
-            try
-            {
-                //Open request to the site
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.AllowWriteStreamBuffering = true;
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = postData.Length;
-
-                //Create buffer of POST data
-                byte[] Buffer = System.Text.Encoding.ASCII.GetBytes(postData);
-
-                Stream PostData = request.GetRequestStream();
-                PostData.Write(Buffer, 0, Buffer.Length);
-
-                //Close and clean up
-                request.GetRequestStream().Close();
-                request.Abort();
-                request.GetRequestStream().Dispose();
-                PostData.Close();
-                PostData.Dispose();
-            }
-            catch (Exception ex)
-            {
-                string messageText = DateTime.Now + " - Scanner: ERROR - " + ex.Message + "\r\n";
-                if (txtLog.InvokeRequired)
-                    txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                    new object[] { messageText });
-                else
-                    OutputUpdateCallback(messageText); //call directly
-            }
-        }
-
-        /// <summary>
-        /// Converts a 802.11 SSID to a string.
-        /// </summary>
-        static string GetStringForSSID(Wlan.Dot11Ssid ssid)
-        {
-            return Encoding.ASCII.GetString(ssid.SSID, 0, (int)ssid.SSIDLength);
-        }
-
-        /// <summary>
-        /// Converts DMS latitude and longitude format to decimal
-        /// </summary>
-        /// <param name="position">Latitude and longitude in DMS format</param>
-        /// <returns>Array of latitude and longitude in decimal format</returns>
-        public string[] convertCoords(string position)
-        {
-            string[] coords = new string[2];
-
-            if (position != "No Data")
-            {
-                string[] replace = { "\"", "N", "S", "E", "W" };
-
-                for (int n = 0; n < replace.Length; n++)
-                    position = position.Replace(replace[n], string.Empty);
-
-                position = position.Replace("\'", ":");
-                position = position.Replace("°", ":");
-
-                coords = position.Split(' ');
-
-                string[] latParts = coords[0].Split(':');
-                string[] longParts = coords[1].Split(':');
-
-                float lat = float.Parse(latParts[0]);
-                float latm = float.Parse(latParts[1]);
-                float lats = float.Parse(latParts[2]);
-
-                float longi = float.Parse(longParts[0]);
-                float longim = float.Parse(longParts[1]);
-                float longis = float.Parse(longParts[2]);
-
-                if (latParts[0].StartsWith("0"))
-                {
-                    lat = -lat;
-                }
-                if (longParts[0].StartsWith("0"))
-                {
-                    longi = -longi;
-                }
-                if (lat < 0)
-                {
-                    latm = -latm;
-                    lats = -lats;
-                }
-                if (longi < 0)
-                {
-                    longim = -longim;
-                    longis = -longis;
-                }
-
-                lat = lat + latm / 60 + lats / 3600;
-                longi = longi + longim / 60 + longis / 3600;
-
-                coords[0] = lat.ToString();
-                coords[1] = longi.ToString();
-            }
-            else
-            {
-                coords[0] = "N/A";
-                coords[1] = "N/A";
-            }
-            return coords;
-        }
-
         private void OutputUpdateCallback(string data)
         {
             txtLog.Text += data;
         }
-        #endregion
-
-        /// <summary>
-        /// Sends current data to website
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void sendToSiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveToSite();
         }
-
-        /// <summary>
-        /// Sends current data to log
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void saveToLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveToLog();
