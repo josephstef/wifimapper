@@ -59,7 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Desktop\managed\bin\Debug\ManagedWifi.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.0.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="SharpGps, Version=0.5.3484.32403, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Desktop\SharpGps\Demo_WinForms\bin\Debug\SharpGps.dll</HintPath>
@@ -99,12 +98,6 @@
     <Compile Include="frmConfig.Designer.cs">
       <DependentUpon>frmConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmGPS.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmGPS.Designer.cs">
-      <DependentUpon>frmGPS.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmSplash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,9 +114,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmConfig.resx">
       <DependentUpon>frmConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmGPS.resx">
-      <DependentUpon>frmGPS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSplash.resx">
       <DependentUpon>frmSplash.cs</DependentUpon>
@@ -149,6 +139,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Utilities.cs" />
+    <Compile Include="wifiMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\wifi.png" />
@@ -172,6 +163,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ManagedWifi.dll" />
+    <Content Include="Resources\SharpGps.dll" />
     <Content Include="wifi.ico" />
     <Content Include="wifiMapper.ico" />
   </ItemGroup>
