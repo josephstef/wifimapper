@@ -1,0 +1,12 @@
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\WITSniff.Form1.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\WITSniff.Properties.Resources.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\WITSniff.csproj.GenerateResource.Cache
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\WITSniff.frmAbout.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Debug\Wifi Mapper.exe.config
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Debug\Wifi Mapper.exe
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Debug\Wifi Mapper.pdb
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\WITSniff.frmConfig.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\WITSniff.frmSplash.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\Wifi Mapper.exe
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Debug\Wifi Mapper.pdb

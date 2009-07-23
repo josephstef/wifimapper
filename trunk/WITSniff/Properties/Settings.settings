@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WITSniff.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="scanDelay" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="enableDelay" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="requireGPS" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="webURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://leemckinnon.com/dev/add.php?</Value>
+    </Setting>
+    <Setting Name="logtoURL" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="logtoFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="maxlogsize" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+    <Setting Name="baudRate" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">4800</Value>
+    </Setting>
+    <Setting Name="comPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM4</Value>
+    </Setting>
+    <Setting Name="modeAdvanced" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="logFileLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\wifi.log</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

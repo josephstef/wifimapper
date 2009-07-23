@@ -1,0 +1,25 @@
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.Form1.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.frmAbout.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.Properties.Resources.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.csproj.GenerateResource.Cache
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.frmConfig.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.frmSplash.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Wifi Mapper.exe.config
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Wifi Mapper.exe
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Wifi Mapper.pdb
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\Wifi Mapper.exe
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\Wifi Mapper.pdb
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.frmGPS.resources
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\SharpGps.pdb
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\Interop.SpeechLib.dll
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\WITSniff.csproj.ResolveComReference.cache
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Interop.SpeechLib.dll
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\ManagedWifi.dll
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\ManagedWifi.pdb
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Resources\hotspotFound.wav
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Wifi Mapper.exe.manifest
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\bin\Release\Wifi Mapper.application
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\Wifi Mapper.TrustInfo.xml
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\Wifi Mapper.exe.manifest
+C:\Users\Lee\Documents\Visual Studio 2008\Projects\WITSniff\WITSniff\obj\Release\Wifi Mapper.application
