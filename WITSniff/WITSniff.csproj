@@ -145,9 +145,6 @@
     <None Include="Resources\wifi.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\hotspotFound.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="Properties\app.manifest" />
     <None Include="Resources\recordImage.png" />
     <None Include="WITSniff_TemporaryKey.pfx" />

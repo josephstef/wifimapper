@@ -337,11 +337,12 @@ namespace WITSniff
                 startToolStripMenuItem.Text = "Start";
             }
         }
-        private void sendDataToWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            logLogToSite();
-        }
         #endregion
+
+        private void OutputUpdateCallback(string data)
+        {
+            txtLog.Text += data;
+        }
 
         //Take a wifi snapshot, and log if indicated
         private void takeSnapshot()
@@ -370,16 +371,12 @@ namespace WITSniff
                         if (Properties.Settings.Default.logtoFile)  //Write the data to a local log file?
                         {
                             lblStatus.Text = "...Writing to log file";
-                            foreach (HotSpot hotspot in hotspots)
-                            {
-                                saveToLog(hotspot);
-                            }
+                            wifiMapper.saveListviewToLog(listView1);
                         }
                         if (Properties.Settings.Default.logtoURL)   //Write the data to a remote website?
                         {
                             lblStatus.Text = "...Sending data to site";
-                            Thread pushThread = new Thread(saveToSite);
-                            pushThread.Start();
+                            wifiMapper.saveListviewToSite(listView1);
                         }
                     }
                 }
@@ -393,8 +390,11 @@ namespace WITSniff
             }
         }
 
-        #region Scanning
-        //Scanning/GPS
+        /// <summary>
+        /// Start Recording
+        /// -Begin Clock if not started
+        /// -Stop if it has already begun
+        /// </summary>
         private void startRecording()
         {
             if (scanStarted)
@@ -420,9 +420,12 @@ namespace WITSniff
                     scanWifi();
             }
         }
+
+        /// <summary>
+        /// Start GPS
+        /// </summary>
         private void startGPS()
         {
-            DateTime timenow = DateTime.Now;
             if (!GPS.IsPortOpen)
             {
                 try
@@ -446,8 +449,14 @@ namespace WITSniff
                         OutputUpdateCallback(messageText); //call directly
                 }
             }
-
         }
+
+        #region Scanning
+        /// <summary>
+        /// Scan wifi
+        /// -CMD command
+        /// -Send findings to listview
+        /// </summary>
         private void scanWifi()
         {
             string output, line;
@@ -485,8 +494,14 @@ namespace WITSniff
                 {
                     NetworkIndex++;
                     hotspot = new HotSpot();
+                    string[] coords;
+                    coords = Utilities.convertCoords(lblGPGGAPosition.Text);
+
                     hotspot.Signal = "0";
                     BSSIDNumber = 0;
+
+                    hotspot.Latitude = coords[0];
+                    hotspot.Longitude = coords[1];
                     hotspot.SSID = line.Substring(line.IndexOf(":") + 1).TrimEnd(' ').TrimStart(' ');
                     continue;
                 }
@@ -550,10 +565,16 @@ namespace WITSniff
             {
                 foreach (HotSpot spot in hotspots)
                 {
-                    SendHotSpotToList(spot);
+                    wifiMapper.SendToList(listView1, spot);
                 }
             }
         }
+
+        /// <summary>
+        /// Scan wifi BASIC
+        /// -Used only for XP machines
+        /// -Send findings to listview
+        /// </summary>
         private void scanWifiBasic()
         {
             NetworkIndex = -1;
@@ -612,232 +633,53 @@ namespace WITSniff
                     hotspot.NetworkType = "N/A";
                     hotspot.Speed = "N/A";
 
-                    SendHotSpotToList(hotspot);
+                    //Send to the main list
+                    wifiMapper.SendToList(listView1, hotspot);
                 }
             }
         }
         #endregion
 
-        private void SendHotSpotToList(HotSpot hotspot)
+        #region Saving Buttons
+        /// <summary>
+        /// Send History hotspots to site
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLogSendSite_Click(object sender, EventArgs e)
         {
-            listView1.Items.Add(hotspot.Mac);                                          // MAC Address
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.SSID);      // SSID
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Channel);      // Channel
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Signal);      // Signal
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Authentication);      // Authenticatiopn
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Encryption);      // Encryption
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.RadioType);      // Radio Type
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.NetworkType);      // Network Type
-            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Speed);      // Speed
+            wifiMapper.saveListviewToSite(listView2);
         }
-        #region Logging
-        //Send data to log
-        private void saveToLog(HotSpot hotspot)
+
+        /// <summary>
+        /// Send History hotspots to log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLogSendLog_Click(object sender, EventArgs e)
         {
-            string messageText = string.Empty;
-            //Does log file exist?
-            if (File.Exists(Properties.Settings.Default.logFileLocation))
-            {
-                string[] coords = new string[2];
-                string logData;
-
-                //Get the coordinates
-                coords = Utilities.convertCoords(lblGPGGAPosition.Text);
-
-                //Begin to read log file
-                StreamReader reader = new StreamReader(Properties.Settings.Default.logFileLocation);
-                logData = reader.ReadToEnd();
-                reader.Close();
-
-                //Does the MAC address exist? Are we in basic mode?
-                if (Regex.IsMatch(logData, hotspot.Mac) && Properties.Settings.Default.modeAdvanced)
-                    messageText += DateTime.Now + " - Scanner: Duplicate Found, skipping [ " + hotspot.SSID + " ]\r\n";
-                else
-                {
-                    //Write to file
-                    StreamWriter SW;
-                    messageText = DateTime.Now + " - Scanner: Writing to File [ " + hotspot.SSID + " ]\r\n";
-                    SW = File.AppendText(@"C:\wifi.log");
-                    SW.WriteLine("##########");
-                    SW.WriteLine("$lat - " + coords[0]);
-                    SW.WriteLine("$longitude - " + coords[1]);
-                    SW.WriteLine("$mac - " + hotspot.Mac);
-                    SW.WriteLine("$ssid - " + hotspot.SSID);
-                    SW.WriteLine("$channel - " + int.Parse(hotspot.Channel.Replace(" ", string.Empty)));
-                    SW.WriteLine("$signal - " + int.Parse(hotspot.Signal.Replace("%", string.Empty)));
-                    SW.WriteLine("$auth - " + hotspot.Authentication);
-                    SW.WriteLine("$encryption - " + hotspot.Encryption);
-                    SW.WriteLine("$radio - " + hotspot.RadioType);
-                    SW.WriteLine("$nettype - " + hotspot.NetworkType);
-                    SW.WriteLine("$speed - " + hotspot.Speed);
-                    SW.WriteLine("$user - Lee");
-                    SW.WriteLine("$entrydtm - " + DateTime.Now);
-                    SW.Close();
-                }
-            }
-            else
-            {
-                //Create file
-                FileInfo wifiLog = new FileInfo(Properties.Settings.Default.logFileLocation);
-                wifiLog.Create();
-                messageText = DateTime.Now + " - Scanner: WifiLog does not exist. Creating...\r\n";
-
-                //Attempt to log again
-
-                saveToLog(hotspot);
-            }
-            if (txtLog.InvokeRequired)
-                txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                new object[] { messageText });
-            else
-                OutputUpdateCallback(messageText); //call directly  
+            wifiMapper.saveListviewToLog(listView2);
         }
-        //Send data to site
-        private void saveToSite()
+
+        /// <summary>
+        /// Send hotspots to site
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSendSite_Click(object sender, EventArgs e)
         {
-            foreach (HotSpot hotspot in hotspots)
-            {
-                string postData;
-                string[] coords = new string[2];
-
-                //Calculate Latitude and Longitude
-                coords = Utilities.convertCoords(lblGPGGAPosition.Text);
-
-                //Generate Post data
-                postData = "lat=" + coords[0] +
-                    "&long=" + coords[1] +
-                    "&mac=" + hotspot.Mac +
-                    "&ssid=" + hotspot.SSID +
-                    "&channel=" + hotspot.Channel +
-                    "&signal=" + hotspot.Signal +
-                    "&auth=" + hotspot.Authentication +
-                    "&encryption=" + hotspot.Encryption +
-                    "&radio=" + hotspot.RadioType +
-                    "&nettype=" + hotspot.NetworkType +
-                    "&lspeedat=" + hotspot.Speed +
-                    "&user=Test";
-
-                //Update Log
-                string messageText = DateTime.Now + " - Scanner: Pushing Hotspot [ " + hotspot.SSID + " ]...\r\n";
-                if (txtLog.InvokeRequired)
-                    txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                    new object[] { messageText });
-                else
-                    OutputUpdateCallback(messageText); //call directly
-
-                //Send to site
-                string url = Properties.Settings.Default.webURL + postData;
-                if (!wifiMapper.SendToWebsite(url, postData))
-                {
-                    messageText = DateTime.Now + " - Scanner: ERROR - An error occured while trying to send the data to the website.\r\n";
-                    if (txtLog.InvokeRequired)
-                        txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                        new object[] { messageText });
-                    else
-                        OutputUpdateCallback(messageText); //call directly
-                }
-            }
+            wifiMapper.saveListviewToSite(listView1);
         }
-        //*Send local log to website
-        private void logLogToSite()
+
+        /// <summary>
+        /// Send hotspots to log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSendLog_Click(object sender, EventArgs e)
         {
-            foreach (HotSpot hotspot in hotspotsLogged)
-            {
-            string latt = hotspot.Latitude.ToString();
-            string lon = hotspot.Longitude.ToString();
-            string[] replace = { "\"", "N", "S", "E", "W" };
-            string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string url = Properties.Settings.Default.webURL;
-            for (int s = 0; s < replace.Length; s++)
-            {
-                lon = lon.Replace(replace[s], string.Empty);
-                latt = latt.Replace(replace[s], string.Empty);
-            }
-            float lat = float.Parse(latt);
-
-            float longi = float.Parse(lon);
-
-            if (logNetworks[i, 1].StartsWith("0"))
-            {
-                lat = -lat;
-            }
-            if (logNetworks[i, 2].StartsWith("0"))
-            {
-                longi = -longi;
-            }
-
-            string postData = "lat=" + lat.ToString() +
-                "&long=" + longi.ToString() +
-                "&mac=" + logNetworks[i, 3] +
-                "&ssid=" + logNetworks[i, 4] +
-                "&channel=" + logNetworks[i, 5] +
-                "&signal=" + logNetworks[i, 6] +
-                "&auth=" + logNetworks[i, 7] +
-                "&encryption=" + logNetworks[i, 8] +
-                "&radio=" + logNetworks[i, 9] +
-                "&nettype=" + logNetworks[i, 10] +
-                "&lspeedat=" + logNetworks[i, 11] +
-                "&user=Test";
-            url += postData;
-
-            string messageText = DateTime.Now + " - Scanner: Pushing Hotspot [ " + logNetworks[i, 1] + " ]...\r\n";
-            if (txtLog.InvokeRequired)
-                txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                new object[] { messageText });
-            else
-                OutputUpdateCallback(messageText); //call directly
-
-            lblStatus.Text = "Sending: " + logNetworks[i, 1];
-
-            try
-            {
-                //updateLog((int)Message.logPushing, logNetworks[i, 1]);
-                //Open request to the site
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.AllowWriteStreamBuffering = true;
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = postData.Length;
-
-                //Create buffer of POST data
-                byte[] Buffer = System.Text.Encoding.ASCII.GetBytes(postData);
-
-                Stream PostData = request.GetRequestStream();
-                PostData.Write(Buffer, 0, Buffer.Length);
-                request.GetRequestStream().Close();
-                request.Abort();
-                request.GetRequestStream().Dispose();
-                PostData.Close();
-                PostData.Dispose();
-            }
-            catch (Exception ex)
-            {
-                messageText = DateTime.Now + " - Scanner: ERROR - " + ex.Message + "\r\n";
-                if (txtLog.InvokeRequired)
-                    txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                    new object[] { messageText });
-                else
-                    OutputUpdateCallback(messageText); //call directly
-           } 
-            
-            }
+            wifiMapper.saveListviewToLog(listView1);
         }
         #endregion
-
-        private void OutputUpdateCallback(string data)
-        {
-            txtLog.Text += data;
-        }
-        private void sendToSiteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveToSite();
-        }
-        private void saveToLogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (HotSpot hotspot in hotspots)
-            {
-                saveToLog(hotspot);
-            }
-        }
     }
 }
