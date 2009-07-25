@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -20,23 +21,38 @@ namespace WITSniff
     {
         System.Windows.Forms.Timer Clock;
         delegate void updateMessageLog(string data);
+        ArrayList hotspots = new ArrayList();
+        ArrayList hotspotsLogged = new ArrayList();
 
         #region Variables
+        public static GPSHandler GPS;
         bool hasFix = false, wifiFound = false, scanStarted = false, GPSAlerted = false;
         int NetworkIndex = -1, LogNetworkIndex = -1;
-        string[,] Networks = new string[10000, 9];
-        string[,] logNetworks = new string[10000, 15];
-        public static GPSHandler GPS;
-        enum Message { gpsScanStart = 0, gpsScanStarted, gpsError, gpsNoFix, gpsStopping, gpsStopped, logScanning, logDuplicate, logResult, logLogging, logPushing, };
+        enum Message
+        {
+            gpsScanStart = 0,
+            gpsScanStarted,
+            gpsError,
+            gpsNoFix,
+            gpsStopping,
+            gpsStopped,
+            logScanning,
+            logDuplicate,
+            logResult,
+            logLogging,
+            logPushing,
+        };
         #endregion
 
         #region Event Handlers
         public Form1()
         {
             InitializeComponent();
+
             GPS = new GPSHandler(this);
             GPS.TimeOut = 5;
             GPS.NewGPSFix += new GPSHandler.NewGPSFixHandler(this.GPSEventHandler);
+
             refreshInformationPanel();
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -112,6 +128,7 @@ namespace WITSniff
         } //Update log with operational data
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            /*
             if (tabControl1.SelectedIndex != 0)
             {
                 LogNetworkIndex = 0;
@@ -191,6 +208,7 @@ namespace WITSniff
                     }
                 }
             }
+             * */
         }
         private void Timer_Tick(object sender, EventArgs eArgs)
         {
@@ -330,44 +348,32 @@ namespace WITSniff
         {
             //Turn GPS on if required
             if (Properties.Settings.Default.requireGPS && !GPS.IsPortOpen)
-            {
                 startGPS();
-            }
 
             refreshInformationPanel();
 
-            //SoundPlayer player;
             //Do we have a fix? OR Do we not required a GPS?
-
             if (hasFix || !Properties.Settings.Default.requireGPS)
             {
                 //Start wifi scanner
                 if (Properties.Settings.Default.modeAdvanced)
-                {
                     scanWifi();
-                }
                 else
-                {
                     scanWifiBasic();
-                }
-
 
                 //Has wifi been found?
                 if (wifiFound)
                 {
-                    string LatandLong = string.Empty;
-
-                    //player = new SoundPlayer(@"C:\Windows\Media\chimes.wav");   //Play sound to indicate that hotspots have been located
-                    //player.Play();
-
                     //Are we recording? If so, log the data or push to site if needed
                     if (scanStarted)
                     {
                         if (Properties.Settings.Default.logtoFile)  //Write the data to a local log file?
                         {
                             lblStatus.Text = "...Writing to log file";
-                            Thread saveLog = new Thread(saveToLog);
-                            saveLog.Start();
+                            foreach (HotSpot hotspot in hotspots)
+                            {
+                                saveToLog(hotspot);
+                            }
                         }
                         if (Properties.Settings.Default.logtoURL)   //Write the data to a remote website?
                         {
@@ -380,9 +386,6 @@ namespace WITSniff
             }
             else  //We do NOT have a fix and we REQUIRE GPS coordinates
             {
-                //Play error sound
-                //player = new SoundPlayer(@"C:\Windows\Media\Borealis\Question_background.wav");  //If we do not have a fix, play a sound
-                //player.Play();
                 updateLog((int)Message.gpsNoFix, string.Empty);
                 lblStatus.BackColor = System.Drawing.Color.Yellow;
                 lblStatus.Text = "...GPS Fix Required";
@@ -447,12 +450,10 @@ namespace WITSniff
         }
         private void scanWifi()
         {
-            string output;
-            string line;
+            string output, line;
             int BSSIDNumber = 0;
-            DateTime timenow = DateTime.Now;
-            NetworkIndex = -1;
-            wifiFound = false;
+            hotspots.Clear();
+            wifiFound = false;                  //wifi has not been found
 
             refreshInformationPanel();
             updateLog((int)Message.logScanning, string.Empty);
@@ -471,6 +472,7 @@ namespace WITSniff
             StringReader sr = new StringReader(output.ToString());
             line = null;
 
+            HotSpot hotspot = new HotSpot();
             while ((line = sr.ReadLine()) != null)
             {
                 if (line.StartsWith("General Failure"))
@@ -482,39 +484,34 @@ namespace WITSniff
                 if (line.StartsWith("SSID"))
                 {
                     NetworkIndex++;
-
-                    for (int i = 0; i < 9; i++)
-                    {
-                        Networks[NetworkIndex, i] = " ";
-                    }
-
-                    Networks[NetworkIndex, 3] = "0%";
+                    hotspot = new HotSpot();
+                    hotspot.Signal = "0";
                     BSSIDNumber = 0;
-                    Networks[NetworkIndex, 1] = line.Substring(line.IndexOf(":") + 1).TrimEnd(' ').TrimStart(' ');
+                    hotspot.SSID = line.Substring(line.IndexOf(":") + 1).TrimEnd(' ').TrimStart(' ');
                     continue;
                 }
-
 
                 if (line.IndexOf("Network type") > 0)
                 {
                     if (line.EndsWith("Infrastructure"))
                     {
-                        Networks[NetworkIndex, 7] = "AP";
+                        hotspot.NetworkType = "AP";
                         continue;
                     }
                     else
                     {
-                        Networks[NetworkIndex, 7] = line.Substring(line.IndexOf(":") + 1); //"Ad-hoc";
+                        hotspot.NetworkType = line.Substring(line.IndexOf(":") + 1); //"Ad-hoc";
                     }
                 }
+
                 if (line.IndexOf("Authentication") > 0)
                 {
-                    Networks[NetworkIndex, 4] = line.Substring(line.IndexOf(":") + 1).TrimStart(' ').TrimEnd(' ');
+                    hotspot.Authentication = line.Substring(line.IndexOf(":") + 1).TrimStart(' ').TrimEnd(' ');
                     continue;
                 }
                 if (line.IndexOf("Encryption") > 0)
                 {
-                    Networks[NetworkIndex, 5] = line.Substring(line.IndexOf(":") + 1).TrimStart(' ').TrimEnd(' ');
+                    hotspot.Encryption = line.Substring(line.IndexOf(":") + 1).TrimStart(' ').TrimEnd(' ');
                     continue;
                 }
                 if (line.IndexOf("BSSID") > 0)
@@ -523,93 +520,37 @@ namespace WITSniff
                     {
                         BSSIDNumber = Convert.ToInt32(line.IndexOf("BSSID" + 6));
                         NetworkIndex++;
-                        Networks[NetworkIndex, 1] = Networks[NetworkIndex - 1, 1]; // same SSID 
-                        Networks[NetworkIndex, 7] = Networks[NetworkIndex - 1, 7]; // same Network Type
-                        Networks[NetworkIndex, 4] = Networks[NetworkIndex - 1, 4]; // Same authorization
-                        Networks[NetworkIndex, 5] = Networks[NetworkIndex - 1, 5]; // same encryption
+                        HotSpot previousHotspot = (HotSpot)hotspots[NetworkIndex - 1];
+                        hotspot = previousHotspot;  //They are the same.
                     }
-                    Networks[NetworkIndex, 0] = line.Substring(line.IndexOf(":") + 1);
+                    hotspot.Mac = line.Substring(line.IndexOf(":") + 1);
                     continue;
                 }
                 if (line.IndexOf("Signal") > 0)
                 {
-                    Networks[NetworkIndex, 3] = line.Substring(line.IndexOf(":") + 1);
+                    hotspot.Signal = line.Substring(line.IndexOf(":") + 1);
                     continue;
                 }
                 if (line.IndexOf("Radio Type") > 0)
                 {
-                    Networks[NetworkIndex, 6] = line.Substring(line.IndexOf(":") + 1);
+                    hotspot.RadioType = line.Substring(line.IndexOf(":") + 1);
                     continue;
                 }
                 if (line.IndexOf("Channel") > 0)
                 {
-                    Networks[NetworkIndex, 2] = line.Substring(line.IndexOf(":") + 1);
+                    hotspot.Channel = line.Substring(line.IndexOf(":") + 1);
+                    hotspots.Add(hotspot);
                     continue;
-                }
-                if (line.IndexOf("Basic Rates") > 0)
-                {
-                    //Networks[NetworkIndex, 8] = line.Substring(line.Length - 2, 2);
-                    Networks[NetworkIndex, 8] = line.Substring(line.IndexOf(":"));
-                    if (Networks[NetworkIndex, 8] == ":") { Networks[NetworkIndex, 8] = "not shown"; continue; }
-                    Networks[NetworkIndex, 8] = Networks[NetworkIndex, 8].TrimStart(':').TrimStart(' ').TrimEnd(' ');
-                    for (int i = Networks[NetworkIndex, 8].Length - 1; i > 0; i--)
-                    {
-                        if (Networks[NetworkIndex, 8].Substring(i, 1) == " ")
-                        {
-                            Networks[NetworkIndex, 8] = Networks[NetworkIndex, 8].Substring(i + 1, Networks[NetworkIndex, 8].Length - 1 - i);
-                            break;
-                        }
-                    }
-                }
-                if (line.IndexOf("Other Rates") > 0)
-                {
-                    // overwrite the basic rates if this entry is present
-                    Networks[NetworkIndex, 8] = line.Substring(line.IndexOf(":"));
-                    if (Networks[NetworkIndex, 8] == ":") { Networks[NetworkIndex, 8] = "not shown"; continue; }
-                    Networks[NetworkIndex, 8] = Networks[NetworkIndex, 8].TrimStart(':').TrimStart(' ').TrimEnd(' ');
-                    for (int i = Networks[NetworkIndex, 8].Length - 1; i >= 0; i--)
-                    {
-                        if (Networks[NetworkIndex, 8].Substring(i, 1) == " ")
-                        {
-                            Networks[NetworkIndex, 8] = Networks[NetworkIndex, 8].Substring(i + 1, Networks[NetworkIndex, 8].Length - 1 - i);
-                            break;
-                        }
-                    }
                 }
             }
 
             listView1.Items.Clear();
 
-            for (int i = 0; i < NetworkIndex + 1; i++)
+            if (hotspots != null)
             {
-                for (int k = 0; k < 8; k++)
+                foreach (HotSpot spot in hotspots)
                 {
-                    ListViewItem SearchItem = new ListViewItem();
-                    if (Networks[i, 0] == " ") continue; // don't search if no valid MAC Address !
-                    SearchItem = listView1.FindItemWithText(Networks[i, k]);
-                    if (SearchItem == null)
-                    {
-                        // New discovery - add it to the list
-
-                        SystemSounds.Question.Play();
-
-                        listView1.Items.Add(Networks[i, 0]);                                          // MAC Address
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 1]);      // SSID
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 2]);      // Channel
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 3]);      // Signal
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 4]);      // Authenticatiopn
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 5]);      // Encryption
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 6]);      // Radio Type
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 7]);      // Network Type
-                        listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[i, 8]);      // Speed
-
-                        if ((Networks[i, 4] == "Open") & (Networks[i, 5] == "None")) listView1.Items[listView1.Items.Count - 1].BackColor = Color.PaleGreen;
-                        listView1.Items[listView1.Items.Count - 1].EnsureVisible();
-                        if ((Networks[i, 4] != "Open")) listView1.Items[listView1.Items.Count - 1].BackColor = Color.Pink;
-                        listView1.Items[listView1.Items.Count - 1].EnsureVisible();
-
-                        wifiFound = true;
-                    }
+                    SendHotSpotToList(spot);
                 }
             }
         }
@@ -618,6 +559,7 @@ namespace WITSniff
             NetworkIndex = -1;
             lblStatus.Text = "...Scanning Basic";
             WlanClient client = new WlanClient();
+            HotSpot hotspot;
             foreach (WlanClient.WlanInterface wlanIface in client.Interfaces)
             {
                 // Lists all networks with WEP security
@@ -625,7 +567,7 @@ namespace WITSniff
                 foreach (Wlan.WlanAvailableNetwork network in networks)
                 {
                     NetworkIndex++;
-
+                    hotspot = new HotSpot();
                     string auth = string.Empty;
                     switch (network.dot11DefaultAuthAlgorithm)
                     {
@@ -659,103 +601,103 @@ namespace WITSniff
                             break;
                     }
 
-                    Networks[NetworkIndex, 0] = "N/A";
-                    Networks[NetworkIndex, 1] = Utilities.GetStringForSSID(network.dot11Ssid);
-                    Networks[NetworkIndex, 2] = "0";
-                    Networks[NetworkIndex, 3] = network.wlanSignalQuality.ToString() + "%";
-                    Networks[NetworkIndex, 4] = auth;
-                    Networks[NetworkIndex, 5] = network.dot11DefaultCipherAlgorithm.ToString();
-                    Networks[NetworkIndex, 6] = "N/A";
-                    Networks[NetworkIndex, 7] = "N/A";
-                    Networks[NetworkIndex, 8] = "N/A";
 
+                    hotspot.Mac = "N/A";
+                    hotspot.SSID = Utilities.GetStringForSSID(network.dot11Ssid);
+                    hotspot.Channel = "0";
+                    hotspot.Signal = network.wlanSignalQuality.ToString() + "%";
+                    hotspot.Authentication = auth;
+                    hotspot.Encryption = network.dot11DefaultCipherAlgorithm.ToString();
+                    hotspot.RadioType = "N/A";
+                    hotspot.NetworkType = "N/A";
+                    hotspot.Speed = "N/A";
 
-                    listView1.Items.Add(Networks[NetworkIndex, 0]);                                          // MAC Address
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 1]);      // SSID
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 2]);      // Channel
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 3]);      // SignaL
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 4]);      // Authenticatiopn
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 5]);      // Encryption
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 6]);      // Radio Type
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 7]);      // Network Type
-                    listView1.Items[listView1.Items.Count - 1].SubItems.Add(Networks[NetworkIndex, 8]);      // Speed
+                    SendHotSpotToList(hotspot);
                 }
             }
         }
         #endregion
 
+        private void SendHotSpotToList(HotSpot hotspot)
+        {
+            listView1.Items.Add(hotspot.Mac);                                          // MAC Address
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.SSID);      // SSID
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Channel);      // Channel
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Signal);      // Signal
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Authentication);      // Authenticatiopn
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Encryption);      // Encryption
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.RadioType);      // Radio Type
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.NetworkType);      // Network Type
+            listView1.Items[listView1.Items.Count - 1].SubItems.Add(hotspot.Speed);      // Speed
+        }
         #region Logging
         //Send data to log
-        private void saveToLog()
+        private void saveToLog(HotSpot hotspot)
         {
             string messageText = string.Empty;
-            for (int i = 0; i < NetworkIndex + 1; i++)
+            //Does log file exist?
+            if (File.Exists(Properties.Settings.Default.logFileLocation))
             {
-                //Does log file exist?
-                if (File.Exists(Properties.Settings.Default.logFileLocation))
-                {
-                    string[] coords = new string[2];
-                    string logData;
+                string[] coords = new string[2];
+                string logData;
 
-                    //Get the coordinates
-                    coords = Utilities.convertCoords(lblGPGGAPosition.Text);
+                //Get the coordinates
+                coords = Utilities.convertCoords(lblGPGGAPosition.Text);
 
-                    //Begin to read log file
-                    StreamReader reader = new StreamReader(Properties.Settings.Default.logFileLocation);
-                    logData = reader.ReadToEnd();
-                    reader.Close();
+                //Begin to read log file
+                StreamReader reader = new StreamReader(Properties.Settings.Default.logFileLocation);
+                logData = reader.ReadToEnd();
+                reader.Close();
 
-                    //Does the MAC address exist? Are we in basic mode?
-                    if (Regex.IsMatch(logData, Networks[i, 0]) && Properties.Settings.Default.modeAdvanced)
-                        messageText += DateTime.Now + " - Scanner: Duplicate Found, skipping [ " + Networks[i, 1] + " ]\r\n";
-                    else
-                    {
-                        //Write to file
-                        StreamWriter SW;
-                        messageText = DateTime.Now + " - Scanner: Writing to File [ " + Networks[i, 1] + " ]\r\n";
-                        SW = File.AppendText(@"C:\wifi.log");
-                        SW.WriteLine("################ Wifi Point - " + i.ToString() + "################");
-                        SW.WriteLine("$lat - " + coords[0] + "");
-                        SW.WriteLine("$longitude - " + coords[1] + "");
-                        SW.WriteLine("$mac - " + Networks[i, 0] + "");
-                        SW.WriteLine("$ssid - " + Networks[i, 1] + "");
-                        SW.WriteLine("$channel - " + int.Parse(Networks[i, 2].Replace(" ", string.Empty)) + "");
-                        SW.WriteLine("$signal - " + int.Parse(Networks[i, 3].Replace("%", string.Empty)) + "");
-                        SW.WriteLine("$auth - " + Networks[i, 4] + "");
-                        SW.WriteLine("$encryption - " + Networks[i, 5] + "");
-                        SW.WriteLine("$radio - " + Networks[i, 6] + "");
-                        SW.WriteLine("$nettype - " + Networks[i, 7] + "");
-                        SW.WriteLine("$speed - " + Networks[i, 8] + "");
-                        SW.WriteLine("$user - Lee");
-                        SW.WriteLine("$entrydtm - " + DateTime.Now + "");
-                        SW.Close();
-                    }
-                }
+                //Does the MAC address exist? Are we in basic mode?
+                if (Regex.IsMatch(logData, hotspot.Mac) && Properties.Settings.Default.modeAdvanced)
+                    messageText += DateTime.Now + " - Scanner: Duplicate Found, skipping [ " + hotspot.SSID + " ]\r\n";
                 else
                 {
-                    //Create file
-                    FileInfo wifiLog = new FileInfo(Properties.Settings.Default.logFileLocation);
-                    wifiLog.Create();
-                    messageText = DateTime.Now + " - Scanner: WifiLog does not exist. Creating...\r\n";
-
-                    //Attempt to log again
-                  
-                    saveToLog();
+                    //Write to file
+                    StreamWriter SW;
+                    messageText = DateTime.Now + " - Scanner: Writing to File [ " + hotspot.SSID + " ]\r\n";
+                    SW = File.AppendText(@"C:\wifi.log");
+                    SW.WriteLine("##########");
+                    SW.WriteLine("$lat - " + coords[0]);
+                    SW.WriteLine("$longitude - " + coords[1]);
+                    SW.WriteLine("$mac - " + hotspot.Mac);
+                    SW.WriteLine("$ssid - " + hotspot.SSID);
+                    SW.WriteLine("$channel - " + int.Parse(hotspot.Channel.Replace(" ", string.Empty)));
+                    SW.WriteLine("$signal - " + int.Parse(hotspot.Signal.Replace("%", string.Empty)));
+                    SW.WriteLine("$auth - " + hotspot.Authentication);
+                    SW.WriteLine("$encryption - " + hotspot.Encryption);
+                    SW.WriteLine("$radio - " + hotspot.RadioType);
+                    SW.WriteLine("$nettype - " + hotspot.NetworkType);
+                    SW.WriteLine("$speed - " + hotspot.Speed);
+                    SW.WriteLine("$user - Lee");
+                    SW.WriteLine("$entrydtm - " + DateTime.Now);
+                    SW.Close();
                 }
-                if (txtLog.InvokeRequired)
-                    txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                    new object[] { messageText });
-                else
-                    OutputUpdateCallback(messageText); //call directly  
             }
+            else
+            {
+                //Create file
+                FileInfo wifiLog = new FileInfo(Properties.Settings.Default.logFileLocation);
+                wifiLog.Create();
+                messageText = DateTime.Now + " - Scanner: WifiLog does not exist. Creating...\r\n";
+
+                //Attempt to log again
+
+                saveToLog(hotspot);
+            }
+            if (txtLog.InvokeRequired)
+                txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
+                new object[] { messageText });
+            else
+                OutputUpdateCallback(messageText); //call directly  
         }
         //Send data to site
         private void saveToSite()
         {
-            for (int i = 0; i < NetworkIndex + 1; i++)
+            foreach (HotSpot hotspot in hotspots)
             {
                 string postData;
-                string signal = Networks[i, 3];
                 string[] coords = new string[2];
 
                 //Calculate Latitude and Longitude
@@ -764,19 +706,19 @@ namespace WITSniff
                 //Generate Post data
                 postData = "lat=" + coords[0] +
                     "&long=" + coords[1] +
-                    "&mac=" + Networks[i, 0] +
-                    "&ssid=" + Networks[i, 1] +
-                    "&channel=" + Networks[i, 2] +
-                    "&signal=" + signal +
-                    "&auth=" + Networks[i, 4] +
-                    "&encryption=" + Networks[i, 5] +
-                    "&radio=" + Networks[i, 6] +
-                    "&nettype=" + Networks[i, 7] +
-                    "&lspeedat=" + Networks[i, 8] +
+                    "&mac=" + hotspot.Mac +
+                    "&ssid=" + hotspot.SSID +
+                    "&channel=" + hotspot.Channel +
+                    "&signal=" + hotspot.Signal +
+                    "&auth=" + hotspot.Authentication +
+                    "&encryption=" + hotspot.Encryption +
+                    "&radio=" + hotspot.RadioType +
+                    "&nettype=" + hotspot.NetworkType +
+                    "&lspeedat=" + hotspot.Speed +
                     "&user=Test";
 
                 //Update Log
-                string messageText = DateTime.Now + " - Scanner: Pushing Hotspot [ " + Networks[i, 1] + " ]...\r\n";
+                string messageText = DateTime.Now + " - Scanner: Pushing Hotspot [ " + hotspot.SSID + " ]...\r\n";
                 if (txtLog.InvokeRequired)
                     txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
                     new object[] { messageText });
@@ -799,85 +741,85 @@ namespace WITSniff
         //*Send local log to website
         private void logLogToSite()
         {
-            for (int i = 0; i < LogNetworkIndex; i++)
+            foreach (HotSpot hotspot in hotspotsLogged)
             {
+            string latt = hotspot.Latitude.ToString();
+            string lon = hotspot.Longitude.ToString();
+            string[] replace = { "\"", "N", "S", "E", "W" };
+            string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string url = Properties.Settings.Default.webURL;
+            for (int s = 0; s < replace.Length; s++)
+            {
+                lon = lon.Replace(replace[s], string.Empty);
+                latt = latt.Replace(replace[s], string.Empty);
+            }
+            float lat = float.Parse(latt);
 
-                string latt = logNetworks[i, 1];
-                string lon = logNetworks[i, 2];
-                string[] replace = { "\"", "N", "S", "E", "W" };
-                string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                string url = Properties.Settings.Default.webURL;
-                for (int s = 0; s < replace.Length; s++)
-                {
-                    lon = lon.Replace(replace[s], string.Empty);
-                    latt = latt.Replace(replace[s], string.Empty);
-                }
-                float lat = float.Parse(latt);
+            float longi = float.Parse(lon);
 
-                float longi = float.Parse(lon);
+            if (logNetworks[i, 1].StartsWith("0"))
+            {
+                lat = -lat;
+            }
+            if (logNetworks[i, 2].StartsWith("0"))
+            {
+                longi = -longi;
+            }
 
-                if (logNetworks[i, 1].StartsWith("0"))
-                {
-                    lat = -lat;
-                }
-                if (logNetworks[i, 2].StartsWith("0"))
-                {
-                    longi = -longi;
-                }
+            string postData = "lat=" + lat.ToString() +
+                "&long=" + longi.ToString() +
+                "&mac=" + logNetworks[i, 3] +
+                "&ssid=" + logNetworks[i, 4] +
+                "&channel=" + logNetworks[i, 5] +
+                "&signal=" + logNetworks[i, 6] +
+                "&auth=" + logNetworks[i, 7] +
+                "&encryption=" + logNetworks[i, 8] +
+                "&radio=" + logNetworks[i, 9] +
+                "&nettype=" + logNetworks[i, 10] +
+                "&lspeedat=" + logNetworks[i, 11] +
+                "&user=Test";
+            url += postData;
 
-                string postData = "lat=" + lat.ToString() +
-                    "&long=" + longi.ToString() +
-                    "&mac=" + logNetworks[i, 3] +
-                    "&ssid=" + logNetworks[i, 4] +
-                    "&channel=" + logNetworks[i, 5] +
-                    "&signal=" + logNetworks[i, 6] +
-                    "&auth=" + logNetworks[i, 7] +
-                    "&encryption=" + logNetworks[i, 8] +
-                    "&radio=" + logNetworks[i, 9] +
-                    "&nettype=" + logNetworks[i, 10] +
-                    "&lspeedat=" + logNetworks[i, 11] +
-                    "&user=Test";
-                url += postData;
+            string messageText = DateTime.Now + " - Scanner: Pushing Hotspot [ " + logNetworks[i, 1] + " ]...\r\n";
+            if (txtLog.InvokeRequired)
+                txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
+                new object[] { messageText });
+            else
+                OutputUpdateCallback(messageText); //call directly
 
-                string messageText = DateTime.Now + " - Scanner: Pushing Hotspot [ " + logNetworks[i, 1] + " ]...\r\n";
+            lblStatus.Text = "Sending: " + logNetworks[i, 1];
+
+            try
+            {
+                //updateLog((int)Message.logPushing, logNetworks[i, 1]);
+                //Open request to the site
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.AllowWriteStreamBuffering = true;
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = postData.Length;
+
+                //Create buffer of POST data
+                byte[] Buffer = System.Text.Encoding.ASCII.GetBytes(postData);
+
+                Stream PostData = request.GetRequestStream();
+                PostData.Write(Buffer, 0, Buffer.Length);
+                request.GetRequestStream().Close();
+                request.Abort();
+                request.GetRequestStream().Dispose();
+                PostData.Close();
+                PostData.Dispose();
+            }
+            catch (Exception ex)
+            {
+                messageText = DateTime.Now + " - Scanner: ERROR - " + ex.Message + "\r\n";
                 if (txtLog.InvokeRequired)
                     txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
                     new object[] { messageText });
                 else
                     OutputUpdateCallback(messageText); //call directly
-
-                lblStatus.Text = "Sending: " + logNetworks[i, 1];
-
-                try
-                {
-                    //updateLog((int)Message.logPushing, logNetworks[i, 1]);
-                    //Open request to the site
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "POST";
-                    request.AllowWriteStreamBuffering = true;
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.ContentLength = postData.Length;
-
-                    //Create buffer of POST data
-                    byte[] Buffer = System.Text.Encoding.ASCII.GetBytes(postData);
-
-                    Stream PostData = request.GetRequestStream();
-                    PostData.Write(Buffer, 0, Buffer.Length);
-                    request.GetRequestStream().Close();
-                    request.Abort();
-                    request.GetRequestStream().Dispose();
-                    PostData.Close();
-                    PostData.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    messageText = DateTime.Now + " - Scanner: ERROR - " + ex.Message + "\r\n";
-                    if (txtLog.InvokeRequired)
-                        txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                        new object[] { messageText });
-                    else
-                        OutputUpdateCallback(messageText); //call directly
-                }
+           } 
+            
             }
         }
         #endregion
@@ -892,7 +834,10 @@ namespace WITSniff
         }
         private void saveToLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveToLog();
+            foreach (HotSpot hotspot in hotspots)
+            {
+                saveToLog(hotspot);
+            }
         }
     }
 }
