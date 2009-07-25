@@ -22,7 +22,6 @@ C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\WITSniff.frmConfig.r
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\WITSniff.frmSplash.resources
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\WITSniff.Properties.Resources.resources
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\WITSniff.csproj.GenerateResource.Cache
-C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\bin\Debug\Resources\hotspotFound.wav
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\bin\Debug\Wifi Mapper.exe.manifest
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\bin\Debug\Wifi Mapper.application
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\bin\Debug\Wifi Mapper.exe

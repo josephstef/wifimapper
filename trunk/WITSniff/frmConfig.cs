@@ -67,7 +67,10 @@ namespace WITSniff
                 Properties.Settings.Default.logtoURL = chkLogtoURL.Checked ? true : false;
                 Properties.Settings.Default.webURL = txtURL.Text;
                 Properties.Settings.Default.logFileLocation = txtLogDir.Text;
-                Properties.Settings.Default.comPort = drpPort.SelectedItem.ToString();
+                if (drpPort.SelectedItem != null) 
+                {
+                                   Properties.Settings.Default.comPort = drpPort.SelectedItem.ToString(); 
+                }
                 Properties.Settings.Default.baudRate = uint.Parse(txtBaudRate.Text);
                 Properties.Settings.Default.enableDelay = chkDelayEnable.Checked ? true : false;
                 Properties.Settings.Default.requireGPS = chkRequireGPS.Checked ? true : false;
@@ -95,7 +98,6 @@ namespace WITSniff
         {
             disableEnable();
         }
-
         private void frmConfig_Load(object sender, EventArgs e)
         {
 
