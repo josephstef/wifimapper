@@ -70,7 +70,7 @@ namespace WITSniff
                 }
             });
 
-            Thread.Sleep(2000); // Emulate hardwork
+            Thread.Sleep(500); // Emulate hardwork
             done = true;
             Show();
         }
@@ -99,7 +99,7 @@ namespace WITSniff
                     txtLog.Text += DateTime.Now + " - GPS: ERROR\r\n";
                     break;
                 case (int)Message.gpsNoFix:
-                    txtLog.Text += DateTime.Now + " - GPS: No Fix\r\n";
+                    txtLog.Text += DateTime.Now + " - GPS: GPS Offline, fix required\r\n";
                     break;
                 case (int)Message.gpsStopping:
                     txtLog.Text += DateTime.Now + " - GPS: Stopping\r\n";
@@ -128,88 +128,82 @@ namespace WITSniff
         } //Update log with operational data
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            /*
+            listView2.Items.Clear();
+            HotSpot hotspot = new HotSpot();
+            int count = 0;
             if (tabControl1.SelectedIndex != 0)
             {
-                LogNetworkIndex = 0;
                 StreamReader reader = new StreamReader(@"C:\wifi.log");
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.StartsWith("##"))
-                        logNetworks[LogNetworkIndex, 0] = "####";
                     if (line.StartsWith("$lat"))
-                        logNetworks[LogNetworkIndex, 1] = line.Replace("$lat - ", string.Empty);
+                        hotspot.Latitude = line.Replace("$lat - ", string.Empty);
                     if (line.StartsWith("$longitude"))
-                        logNetworks[LogNetworkIndex, 2] = line.Replace("$longitude - ", string.Empty);
+                        hotspot.Longitude = line.Replace("$longitude - ", string.Empty);
                     if (line.StartsWith("$mac"))
-                        logNetworks[LogNetworkIndex, 3] = line.Replace("$mac - ", string.Empty);
+                        hotspot.Mac = line.Replace("$mac - ", string.Empty);
                     if (line.StartsWith("$ssid"))
-                        logNetworks[LogNetworkIndex, 4] = line.Replace("$ssid - ", string.Empty);
+                        hotspot.SSID = line.Replace("$ssid - ", string.Empty);
                     if (line.StartsWith("$channel"))
-                        logNetworks[LogNetworkIndex, 5] = line.Replace("$channel - ", string.Empty);
+                        hotspot.Channel = line.Replace("$channel - ", string.Empty);
                     if (line.StartsWith("$signal"))
-                        logNetworks[LogNetworkIndex, 6] = line.Replace("$signal - ", string.Empty);
+                        hotspot.Signal = line.Replace("$signal - ", string.Empty);
                     if (line.StartsWith("$auth"))
-                        logNetworks[LogNetworkIndex, 7] = line.Replace("$auth - ", string.Empty);
+                        hotspot.RadioType = line.Replace("$auth - ", string.Empty);
                     if (line.StartsWith("$encryption"))
-                        logNetworks[LogNetworkIndex, 8] = line.Replace("$encryption - ", string.Empty);
+                        hotspot.NetworkType = line.Replace("$encryption - ", string.Empty);
                     if (line.StartsWith("$radio"))
-                        logNetworks[LogNetworkIndex, 9] = line.Replace("$radio - ", string.Empty);
+                        hotspot.Authentication = line.Replace("$radio - ", string.Empty);
                     if (line.StartsWith("$nettype"))
-                        logNetworks[LogNetworkIndex, 10] = line.Replace("$nettype - ", string.Empty);
+                        hotspot.Encryption = line.Replace("$nettype - ", string.Empty);
                     if (line.StartsWith("$speed"))
-                        logNetworks[LogNetworkIndex, 11] = line.Replace("$speed - ", string.Empty);
-                    if (line.StartsWith("$user"))
-                        logNetworks[LogNetworkIndex, 12] = line.Replace("$user - ", string.Empty);
+                        hotspot.Speed = line.Replace("$speed - ", string.Empty);
                     if (line.StartsWith("$entrydtm"))
-                        logNetworks[LogNetworkIndex, 13] = line.Replace("$entrydtm - ", string.Empty);
-                    if (line.StartsWith("$updatedtm"))
                     {
-                        logNetworks[LogNetworkIndex, 14] = line.Replace("$updatedtm - ", string.Empty);
-                        LogNetworkIndex++;
+
+                    }
+                    if (line.StartsWith("#####"))
+                    {
+                        ListViewItem SearchItem = new ListViewItem();
+                        SearchItem = listView2.FindItemWithText(hotspot.Mac);
+                        if ((SearchItem = listView2.FindItemWithText(hotspot.Mac)) == null)
+                        {
+                            if (hotspot.Mac != string.Empty && hotspot.Mac != null)
+                            {
+                                // Add to list...
+
+                                listView2.Items.Add(hotspot.Latitude);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Longitude);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Mac);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.SSID);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Channel);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Signal);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Authentication);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Encryption);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.RadioType);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.NetworkType);
+                                listView2.Items[listView2.Items.Count - 1].SubItems.Add(hotspot.Speed);
+
+                                count++;
+                                //hotspot = new HotSpot();
+
+                                if (hotspot.Authentication == "Open" && hotspot.Encryption == "None")
+                                {
+                                    listView2.Items[listView2.Items.Count - 1].BackColor = System.Drawing.Color.LightGreen;
+                                }
+                                else
+                                {
+                                    listView2.Items[listView2.Items.Count - 1].BackColor = System.Drawing.Color.LightPink;
+                                }
+                            }
+                       }
                     }
                 }
                 reader.Close();
-
-                listView2.Items.Clear();
-
-                for (int i = 0; i < LogNetworkIndex + 1; i++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        ListViewItem SearchItem = new ListViewItem();
-                        if (logNetworks[i, 0] == " ") continue; // don't search if no valid MAC Address !
-                        if (logNetworks[i, 0] == null) continue; // don't search if no valid MAC Address !
-                        SearchItem = listView2.FindItemWithText(logNetworks[i, k]);
-                        if (SearchItem == null)
-                        {
-                            // New discovery - add it to the list
-
-                            SystemSounds.Question.Play();
-
-                            listView2.Items.Add(logNetworks[i, 1]);                                          // MAC Address
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 2]);      // SSID
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 3]);      // Channel
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 4]);      // Signal
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 5]);      // Authenticatiopn
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 6]);      // Encryption
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 7]);      // Radio Type
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 8]);      // Network Type
-                            listView2.Items[listView2.Items.Count - 1].SubItems.Add(logNetworks[i, 9]);      // Speed
-
-                            if ((logNetworks[i, 7] == "Open") & (logNetworks[i, 8] == "None")) listView2.Items[listView2.Items.Count - 1].BackColor = Color.PaleGreen;
-                            listView2.Items[listView2.Items.Count - 1].EnsureVisible();
-                            if ((logNetworks[i, 7] == "Open") & (logNetworks[i, 8] != "None")) listView2.Items[listView2.Items.Count - 1].BackColor = Color.Pink;
-                            listView2.Items[listView2.Items.Count - 1].EnsureVisible();
-
-                            wifiFound = true;
-                        }
-                    }
-                }
             }
-             * */
         }
+
         private void Timer_Tick(object sender, EventArgs eArgs)
         {
             takeSnapshot();
@@ -252,9 +246,7 @@ namespace WITSniff
             {
                 lblGPSStatus.BackColor = System.Drawing.Color.Red;
                 lblGPSStatus.ForeColor = System.Drawing.Color.White;
-                lblGPSStatus.Text = "GPS Offline";
                 lblGPSStatus.Text = "No Satellite fix";
-                lblGPSStatus.BackColor = System.Drawing.Color.Pink;
                 lblCourse.Text = "N/A";
                 lblSpeed.Text = "N/A";
                 lblGPGGATime.Text = GPS.GPRMC.TimeOfFix.ToString("F");
@@ -563,11 +555,14 @@ namespace WITSniff
 
             if (hotspots != null)
             {
+                wifiFound = true;
                 foreach (HotSpot spot in hotspots)
                 {
                     wifiMapper.SendToList(listView1, spot);
                 }
             }
+            else
+                wifiFound = false;
         }
 
         /// <summary>
@@ -681,5 +676,10 @@ namespace WITSniff
             wifiMapper.saveListviewToLog(listView1);
         }
         #endregion
+
+        private void pushLogToSiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            wifiMapper.saveListviewToSite(listView2);
+        }
     }
 }
