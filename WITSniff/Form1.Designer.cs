@@ -51,8 +51,7 @@
             this.aboToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btnSendLog = new System.Windows.Forms.Button();
-            this.btnSendSite = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader12 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader13 = new System.Windows.Forms.ColumnHeader();
@@ -69,6 +68,9 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnSendSite = new System.Windows.Forms.Button();
+            this.btnSendLog = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.lblGPSDirection = new System.Windows.Forms.Label();
@@ -89,7 +91,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lblGPSUTM = new System.Windows.Forms.Label();
             this.lblMagVar = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.lblGPGGATime = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -109,8 +110,6 @@
             this.btnLogSendLog = new System.Windows.Forms.Button();
             this.btnLogSendSite = new System.Windows.Forms.Button();
             this.listView2 = new System.Windows.Forms.ListView();
-            this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
@@ -120,18 +119,23 @@
             this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
+            this.pushLogToSiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -149,10 +153,10 @@
             this.lbl,
             this.lblGPSStatus,
             this.lblGPSStatusStatic});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 662);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 714);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.statusStrip1.Size = new System.Drawing.Size(1212, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1355, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -195,10 +199,11 @@
             this.modeToolStripMenuItem,
             this.gPSToolStripMenuItem,
             this.scanToolStripMenuItem,
-            this.aboToolStripMenuItem});
+            this.aboToolStripMenuItem,
+            this.pushLogToSiteToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1212, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1355, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -236,13 +241,13 @@
             // basicToolStripMenuItem
             // 
             this.basicToolStripMenuItem.Name = "basicToolStripMenuItem";
-            this.basicToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.basicToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.basicToolStripMenuItem.Text = "Basic";
             // 
             // advancedToolStripMenuItem
             // 
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
-            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.advancedToolStripMenuItem.Text = "Advanced";
             // 
             // gPSToolStripMenuItem
@@ -256,7 +261,7 @@
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
@@ -300,7 +305,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1212, 638);
+            this.panel1.Size = new System.Drawing.Size(1355, 690);
             this.panel1.TabIndex = 7;
             // 
             // splitContainer1
@@ -312,36 +317,25 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.btnSendLog);
-            this.splitContainer1.Panel1.Controls.Add(this.btnSendSite);
-            this.splitContainer1.Panel1.Controls.Add(this.listView1);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox6);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(1212, 638);
-            this.splitContainer1.SplitterDistance = 281;
+            this.splitContainer1.Size = new System.Drawing.Size(1355, 690);
+            this.splitContainer1.SplitterDistance = 303;
             this.splitContainer1.TabIndex = 4;
             // 
-            // btnSendLog
+            // groupBox6
             // 
-            this.btnSendLog.Location = new System.Drawing.Point(1103, 244);
-            this.btnSendLog.Name = "btnSendLog";
-            this.btnSendLog.Size = new System.Drawing.Size(102, 27);
-            this.btnSendLog.TabIndex = 7;
-            this.btnSendLog.Text = "Send to Log";
-            this.btnSendLog.UseVisualStyleBackColor = true;
-            this.btnSendLog.Click += new System.EventHandler(this.btnSendLog_Click);
-            // 
-            // btnSendSite
-            // 
-            this.btnSendSite.Location = new System.Drawing.Point(995, 244);
-            this.btnSendSite.Name = "btnSendSite";
-            this.btnSendSite.Size = new System.Drawing.Size(102, 27);
-            this.btnSendSite.TabIndex = 6;
-            this.btnSendSite.Text = "Send to Site";
-            this.btnSendSite.UseVisualStyleBackColor = true;
-            this.btnSendSite.Click += new System.EventHandler(this.btnSendSite_Click);
+            this.groupBox6.Controls.Add(this.listView1);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox6.Location = new System.Drawing.Point(0, 0);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(1355, 300);
+            this.groupBox6.TabIndex = 8;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "WiFi hotspots in current location:";
             // 
             // listView1
             // 
@@ -358,11 +352,12 @@
             this.RadioType,
             this.NetworkType,
             this.Speed});
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
+            this.listView1.Location = new System.Drawing.Point(3, 16);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1212, 238);
+            this.listView1.Size = new System.Drawing.Size(1349, 281);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -431,7 +426,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1212, 353);
+            this.groupBox1.Size = new System.Drawing.Size(1355, 383);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Information";
@@ -444,7 +439,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 16);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1206, 334);
+            this.tabControl1.Size = new System.Drawing.Size(1349, 364);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -454,7 +449,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1198, 308);
+            this.tabPage1.Size = new System.Drawing.Size(1341, 338);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General Information";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -468,26 +463,57 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.groupBox7);
             this.splitContainer2.Panel1.Controls.Add(this.groupBox3);
             this.splitContainer2.Panel1.Controls.Add(this.groupBox2);
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(1192, 302);
-            this.splitContainer2.SplitterDistance = 154;
+            this.splitContainer2.Size = new System.Drawing.Size(1335, 332);
+            this.splitContainer2.SplitterDistance = 169;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.btnSendSite);
+            this.groupBox7.Controls.Add(this.btnSendLog);
+            this.groupBox7.Location = new System.Drawing.Point(1216, 13);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(116, 90);
+            this.groupBox7.TabIndex = 14;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Saving";
+            // 
+            // btnSendSite
+            // 
+            this.btnSendSite.Location = new System.Drawing.Point(6, 19);
+            this.btnSendSite.Name = "btnSendSite";
+            this.btnSendSite.Size = new System.Drawing.Size(102, 27);
+            this.btnSendSite.TabIndex = 6;
+            this.btnSendSite.Text = "Send to Site";
+            this.btnSendSite.UseVisualStyleBackColor = true;
+            this.btnSendSite.Click += new System.EventHandler(this.btnSendSite_Click);
+            // 
+            // btnSendLog
+            // 
+            this.btnSendLog.Location = new System.Drawing.Point(6, 52);
+            this.btnSendLog.Name = "btnSendLog";
+            this.btnSendLog.Size = new System.Drawing.Size(102, 27);
+            this.btnSendLog.TabIndex = 7;
+            this.btnSendLog.Text = "Send to Log";
+            this.btnSendLog.UseVisualStyleBackColor = true;
+            this.btnSendLog.Click += new System.EventHandler(this.btnSendLog_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Controls.Add(this.groupBox5);
-            this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.lblGPGGATime);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(216, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(579, 187);
+            this.groupBox3.Size = new System.Drawing.Size(579, 155);
             this.groupBox3.TabIndex = 13;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "GPS";
@@ -680,15 +706,6 @@
             this.lblMagVar.TabIndex = 10;
             this.lblMagVar.Text = "No Data";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 156);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 18);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Time of fix:";
-            // 
             // lblGPGGATime
             // 
             this.lblGPGGATime.AutoSize = true;
@@ -713,7 +730,7 @@
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(3, 13);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 187);
+            this.groupBox2.Size = new System.Drawing.Size(200, 154);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Scanner";
@@ -822,8 +839,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.txtRaw);
-            this.splitContainer3.Size = new System.Drawing.Size(1192, 144);
-            this.splitContainer3.SplitterDistance = 66;
+            this.splitContainer3.Size = new System.Drawing.Size(1335, 159);
+            this.splitContainer3.SplitterDistance = 72;
             this.splitContainer3.TabIndex = 0;
             // 
             // txtLog
@@ -836,7 +853,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(1192, 66);
+            this.txtLog.Size = new System.Drawing.Size(1335, 72);
             this.txtLog.TabIndex = 7;
             this.txtLog.WordWrap = false;
             this.txtLog.TextChanged += new System.EventHandler(this.txtLog_TextChanged);
@@ -851,18 +868,18 @@
             this.txtRaw.Multiline = true;
             this.txtRaw.Name = "txtRaw";
             this.txtRaw.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRaw.Size = new System.Drawing.Size(1192, 74);
+            this.txtRaw.Size = new System.Drawing.Size(1335, 83);
             this.txtRaw.TabIndex = 6;
             this.txtRaw.TextChanged += new System.EventHandler(this.txtRaw_TextChanged);
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.listView2);
             this.tabPage4.Controls.Add(this.btnLogSendLog);
             this.tabPage4.Controls.Add(this.btnLogSendSite);
-            this.tabPage4.Controls.Add(this.listView2);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1198, 308);
+            this.tabPage4.Size = new System.Drawing.Size(1341, 338);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Local Log File View";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -891,8 +908,6 @@
             // 
             this.listView2.AllowColumnReorder = true;
             this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader10,
-            this.columnHeader11,
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
@@ -901,77 +916,88 @@
             this.columnHeader6,
             this.columnHeader7,
             this.columnHeader8,
-            this.columnHeader9});
-            this.listView2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.columnHeader9,
+            this.columnHeader10,
+            this.columnHeader11});
+            this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView2.FullRowSelect = true;
             this.listView2.GridLines = true;
             this.listView2.Location = new System.Drawing.Point(0, 0);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(1198, 288);
-            this.listView2.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.listView2.Size = new System.Drawing.Size(1341, 338);
             this.listView2.TabIndex = 4;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader10
-            // 
-            this.columnHeader10.Text = "Latitude";
-            this.columnHeader10.Width = 100;
-            // 
-            // columnHeader11
-            // 
-            this.columnHeader11.Text = "Longitude";
-            this.columnHeader11.Width = 100;
-            // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "MAC Address";
-            this.columnHeader1.Width = 150;
+            this.columnHeader1.DisplayIndex = 1;
+            this.columnHeader1.Text = "Longitude";
+            this.columnHeader1.Width = 109;
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "SSID";
-            this.columnHeader2.Width = 250;
+            this.columnHeader2.DisplayIndex = 0;
+            this.columnHeader2.Text = "Latitude";
+            this.columnHeader2.Width = 112;
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Channel";
+            this.columnHeader3.Text = "MAC Address";
+            this.columnHeader3.Width = 107;
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Signal";
-            this.columnHeader4.Width = 47;
+            this.columnHeader4.Text = "SSID";
+            this.columnHeader4.Width = 249;
             // 
             // columnHeader5
             // 
-            this.columnHeader5.Text = "Authentication";
+            this.columnHeader5.Text = "Channel";
             this.columnHeader5.Width = 85;
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Encryption";
-            this.columnHeader6.Width = 74;
+            this.columnHeader6.Text = "Signal";
+            this.columnHeader6.Width = 45;
             // 
             // columnHeader7
             // 
-            this.columnHeader7.Text = "Radio Type";
-            this.columnHeader7.Width = 81;
+            this.columnHeader7.Text = "Authentication";
+            this.columnHeader7.Width = 102;
             // 
             // columnHeader8
             // 
-            this.columnHeader8.Text = "Network Type";
-            this.columnHeader8.Width = 85;
+            this.columnHeader8.Text = "Encryption";
+            this.columnHeader8.Width = 102;
             // 
             // columnHeader9
             // 
-            this.columnHeader9.Text = "Speed";
-            this.columnHeader9.Width = 52;
+            this.columnHeader9.Text = "Radio Type";
+            this.columnHeader9.Width = 105;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "Network Type";
+            this.columnHeader10.Width = 134;
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "Speed";
+            this.columnHeader11.Width = 49;
+            // 
+            // pushLogToSiteToolStripMenuItem
+            // 
+            this.pushLogToSiteToolStripMenuItem.Name = "pushLogToSiteToolStripMenuItem";
+            this.pushLogToSiteToolStripMenuItem.Size = new System.Drawing.Size(104, 20);
+            this.pushLogToSiteToolStripMenuItem.Text = "Push Log to Site";
+            this.pushLogToSiteToolStripMenuItem.Click += new System.EventHandler(this.pushLogToSiteToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1212, 684);
+            this.ClientSize = new System.Drawing.Size(1355, 736);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.statusStrip1);
@@ -991,12 +1017,14 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -1030,53 +1058,12 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem gPSToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel lblGPSStatus;
         private System.Windows.Forms.ToolStripStatusLabel lblGPSStatusStatic;
         private System.Windows.Forms.ToolStripMenuItem scannerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gPSScanToolStripMenuItem;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblCourse;
-        private System.Windows.Forms.Label lblGPSUTM;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblMagVar;
-        private System.Windows.Forms.Label lblGPGGAPosition;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lblSpeed;
-        private System.Windows.Forms.Label lblGPGGATime;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label lblInfoGPSReq;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label lblInfoSpeed;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label lblInfoDelay;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.TextBox txtLog;
-        private System.Windows.Forms.TextBox txtRaw;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label lblInfoLogFile;
-        private System.Windows.Forms.Label lblInfoLogSite;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label lblGPSNumSatellites;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Label lblGPSAltitude;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Label lblGPSDirection;
-        private System.Windows.Forms.Label lblGPSAccuracy;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader MAC_Address;
         private System.Windows.Forms.ColumnHeader SSID;
@@ -1087,6 +1074,57 @@
         private System.Windows.Forms.ColumnHeader RadioType;
         private System.Windows.Forms.ColumnHeader NetworkType;
         private System.Windows.Forms.ColumnHeader Speed;
+        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem basicToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnHeader12;
+        private System.Windows.Forms.ColumnHeader columnHeader13;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Button btnSendSite;
+        private System.Windows.Forms.Button btnSendLog;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label lblGPSDirection;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblGPSAltitude;
+        private System.Windows.Forms.Label lblSpeed;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lblGPGGAPosition;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblCourse;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label lblGPSAccuracy;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblGPSNumSatellites;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblGPSUTM;
+        private System.Windows.Forms.Label lblMagVar;
+        private System.Windows.Forms.Label lblGPGGATime;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lblInfoLogFile;
+        private System.Windows.Forms.Label lblInfoLogSite;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lblInfoGPSReq;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblInfoSpeed;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblInfoDelay;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.TextBox txtRaw;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Button btnLogSendLog;
+        private System.Windows.Forms.Button btnLogSendSite;
         private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
@@ -1099,15 +1137,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
-        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem basicToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
-        private System.Windows.Forms.ColumnHeader columnHeader12;
-        private System.Windows.Forms.ColumnHeader columnHeader13;
-        private System.Windows.Forms.Button btnLogSendLog;
-        private System.Windows.Forms.Button btnLogSendSite;
-        private System.Windows.Forms.Button btnSendLog;
-        private System.Windows.Forms.Button btnSendSite;
+        private System.Windows.Forms.ToolStripMenuItem pushLogToSiteToolStripMenuItem;
     }
 }
 
