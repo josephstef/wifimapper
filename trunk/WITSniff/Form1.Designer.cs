@@ -960,7 +960,6 @@
             this.btnLogSendLog.TabIndex = 6;
             this.btnLogSendLog.Text = "Send to Log";
             this.btnLogSendLog.UseVisualStyleBackColor = true;
-            this.btnLogSendLog.Click += new System.EventHandler(this.btnLogSendLog_Click);
             // 
             // btnLogSendSite
             // 
@@ -970,7 +969,6 @@
             this.btnLogSendSite.TabIndex = 5;
             this.btnLogSendSite.Text = "Send to Site";
             this.btnLogSendSite.UseVisualStyleBackColor = true;
-            this.btnLogSendSite.Click += new System.EventHandler(this.btnLogSendSite_Click);
             // 
             // Form1
             // 

@@ -16,13 +16,11 @@ namespace WITSniff
         public frmSplash()
         {
             InitializeComponent();
-            lblName.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             lblVersion.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Clock = new System.Windows.Forms.Timer();
             Clock.Interval = 1;
             Clock.Start();
             Clock.Tick += new EventHandler(Timer_Tick);
-
         }
 
         public void Timer_Tick(object sender, EventArgs eArgs)
@@ -34,16 +32,5 @@ namespace WITSniff
                 Clock.Stop();
             }
         }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void frmSplash_Load(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

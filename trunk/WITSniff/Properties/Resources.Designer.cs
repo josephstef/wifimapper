@@ -67,16 +67,9 @@ namespace WITSniff.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap wifi {
+        internal static System.Drawing.Bitmap splash {
             get {
-                object obj = ResourceManager.GetObject("wifi", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap wifi1 {
-            get {
-                object obj = ResourceManager.GetObject("wifi1", resourceCulture);
+                object obj = ResourceManager.GetObject("splash", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
