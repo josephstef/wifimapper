@@ -677,7 +677,7 @@ namespace WITSniff
         }
         #endregion
 
-        private void pushLogToSiteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnPushToSite_Click(object sender, EventArgs e)
         {
             wifiMapper.saveListviewToSite(listView2);
         }
