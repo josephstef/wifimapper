@@ -69,8 +69,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.btnSendSite = new System.Windows.Forms.Button();
-            this.btnSendLog = new System.Windows.Forms.Button();
+            this.btnPushToSite = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.lblGPSDirection = new System.Windows.Forms.Label();
@@ -107,8 +106,6 @@
             this.txtLog = new System.Windows.Forms.TextBox();
             this.txtRaw = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.btnLogSendLog = new System.Windows.Forms.Button();
-            this.btnLogSendSite = new System.Windows.Forms.Button();
             this.listView2 = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -121,7 +118,8 @@
             this.columnHeader9 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader10 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader11 = new System.Windows.Forms.ColumnHeader();
-            this.pushLogToSiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnLogSendLog = new System.Windows.Forms.Button();
+            this.btnLogSendSite = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -199,8 +197,7 @@
             this.modeToolStripMenuItem,
             this.gPSToolStripMenuItem,
             this.scanToolStripMenuItem,
-            this.aboToolStripMenuItem,
-            this.pushLogToSiteToolStripMenuItem});
+            this.aboToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1355, 24);
@@ -476,34 +473,23 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.btnSendSite);
-            this.groupBox7.Controls.Add(this.btnSendLog);
-            this.groupBox7.Location = new System.Drawing.Point(1216, 13);
+            this.groupBox7.Controls.Add(this.btnPushToSite);
+            this.groupBox7.Location = new System.Drawing.Point(801, 37);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(116, 90);
-            this.groupBox7.TabIndex = 14;
+            this.groupBox7.Size = new System.Drawing.Size(126, 124);
+            this.groupBox7.TabIndex = 15;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Saving";
             // 
-            // btnSendSite
+            // btnPushToSite
             // 
-            this.btnSendSite.Location = new System.Drawing.Point(6, 19);
-            this.btnSendSite.Name = "btnSendSite";
-            this.btnSendSite.Size = new System.Drawing.Size(102, 27);
-            this.btnSendSite.TabIndex = 6;
-            this.btnSendSite.Text = "Send to Site";
-            this.btnSendSite.UseVisualStyleBackColor = true;
-            this.btnSendSite.Click += new System.EventHandler(this.btnSendSite_Click);
-            // 
-            // btnSendLog
-            // 
-            this.btnSendLog.Location = new System.Drawing.Point(6, 52);
-            this.btnSendLog.Name = "btnSendLog";
-            this.btnSendLog.Size = new System.Drawing.Size(102, 27);
-            this.btnSendLog.TabIndex = 7;
-            this.btnSendLog.Text = "Send to Log";
-            this.btnSendLog.UseVisualStyleBackColor = true;
-            this.btnSendLog.Click += new System.EventHandler(this.btnSendLog_Click);
+            this.btnPushToSite.Location = new System.Drawing.Point(6, 19);
+            this.btnPushToSite.Name = "btnPushToSite";
+            this.btnPushToSite.Size = new System.Drawing.Size(113, 41);
+            this.btnPushToSite.TabIndex = 14;
+            this.btnPushToSite.Text = "Push log to site";
+            this.btnPushToSite.UseVisualStyleBackColor = true;
+            this.btnPushToSite.Click += new System.EventHandler(this.btnPushToSite_Click);
             // 
             // groupBox3
             // 
@@ -884,26 +870,6 @@
             this.tabPage4.Text = "Local Log File View";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // btnLogSendLog
-            // 
-            this.btnLogSendLog.Location = new System.Drawing.Point(1091, 327);
-            this.btnLogSendLog.Name = "btnLogSendLog";
-            this.btnLogSendLog.Size = new System.Drawing.Size(102, 27);
-            this.btnLogSendLog.TabIndex = 6;
-            this.btnLogSendLog.Text = "Send to Log";
-            this.btnLogSendLog.UseVisualStyleBackColor = true;
-            this.btnLogSendLog.Click += new System.EventHandler(this.btnLogSendLog_Click);
-            // 
-            // btnLogSendSite
-            // 
-            this.btnLogSendSite.Location = new System.Drawing.Point(1091, 294);
-            this.btnLogSendSite.Name = "btnLogSendSite";
-            this.btnLogSendSite.Size = new System.Drawing.Size(102, 27);
-            this.btnLogSendSite.TabIndex = 5;
-            this.btnLogSendSite.Text = "Send to Site";
-            this.btnLogSendSite.UseVisualStyleBackColor = true;
-            this.btnLogSendSite.Click += new System.EventHandler(this.btnLogSendSite_Click);
-            // 
             // listView2
             // 
             this.listView2.AllowColumnReorder = true;
@@ -986,12 +952,25 @@
             this.columnHeader11.Text = "Speed";
             this.columnHeader11.Width = 49;
             // 
-            // pushLogToSiteToolStripMenuItem
+            // btnLogSendLog
             // 
-            this.pushLogToSiteToolStripMenuItem.Name = "pushLogToSiteToolStripMenuItem";
-            this.pushLogToSiteToolStripMenuItem.Size = new System.Drawing.Size(104, 20);
-            this.pushLogToSiteToolStripMenuItem.Text = "Push Log to Site";
-            this.pushLogToSiteToolStripMenuItem.Click += new System.EventHandler(this.pushLogToSiteToolStripMenuItem_Click);
+            this.btnLogSendLog.Location = new System.Drawing.Point(1091, 327);
+            this.btnLogSendLog.Name = "btnLogSendLog";
+            this.btnLogSendLog.Size = new System.Drawing.Size(102, 27);
+            this.btnLogSendLog.TabIndex = 6;
+            this.btnLogSendLog.Text = "Send to Log";
+            this.btnLogSendLog.UseVisualStyleBackColor = true;
+            this.btnLogSendLog.Click += new System.EventHandler(this.btnLogSendLog_Click);
+            // 
+            // btnLogSendSite
+            // 
+            this.btnLogSendSite.Location = new System.Drawing.Point(1091, 294);
+            this.btnLogSendSite.Name = "btnLogSendSite";
+            this.btnLogSendSite.Size = new System.Drawing.Size(102, 27);
+            this.btnLogSendSite.TabIndex = 5;
+            this.btnLogSendSite.Text = "Send to Site";
+            this.btnLogSendSite.UseVisualStyleBackColor = true;
+            this.btnLogSendSite.Click += new System.EventHandler(this.btnLogSendSite_Click);
             // 
             // Form1
             // 
@@ -1006,7 +985,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "WifiScout";
+            this.Text = "WiFi Scout";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.statusStrip1.ResumeLayout(false);
@@ -1084,9 +1063,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.Button btnSendSite;
-        private System.Windows.Forms.Button btnSendLog;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label lblGPSDirection;
@@ -1137,7 +1113,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
-        private System.Windows.Forms.ToolStripMenuItem pushLogToSiteToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Button btnPushToSite;
     }
 }
 
