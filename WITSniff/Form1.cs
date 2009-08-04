@@ -19,15 +19,17 @@ namespace WITSniff
 {
     public partial class Form1 : Form
     {
+        #region GlobalObjects
         System.Windows.Forms.Timer Clock;
+        public static GPSHandler GPS;
         delegate void updateMessageLog(string data);
         ArrayList hotspots = new ArrayList();
         ArrayList hotspotsLogged = new ArrayList();
+        #endregion
 
         #region Variables
-        public static GPSHandler GPS;
+        int NetworkIndex = -1;
         bool hasFix = false, wifiFound = false, scanStarted = false, GPSAlerted = false;
-        int NetworkIndex = -1, LogNetworkIndex = -1;
         enum Message
         {
             gpsScanStart = 0,
@@ -70,7 +72,7 @@ namespace WITSniff
                 }
             });
 
-            Thread.Sleep(500); // Emulate hardwork
+            Thread.Sleep(5000); // Show user the disclaimer
             done = true;
             Show();
         }
@@ -197,13 +199,12 @@ namespace WITSniff
                                     listView2.Items[listView2.Items.Count - 1].BackColor = System.Drawing.Color.LightPink;
                                 }
                             }
-                       }
+                        }
                     }
                 }
                 reader.Close();
             }
         }
-
         private void Timer_Tick(object sender, EventArgs eArgs)
         {
             takeSnapshot();
@@ -287,6 +288,10 @@ namespace WITSniff
         {
             GPS.Dispose();  //Closes serial port and cleans up. This is important !
         }
+        private void btnPushToSite_Click(object sender, EventArgs e)
+        {
+            wifiMapper.saveListviewToSite(listView2);
+        }
         #endregion
 
         #region Menu Items
@@ -330,11 +335,6 @@ namespace WITSniff
             }
         }
         #endregion
-
-        private void OutputUpdateCallback(string data)
-        {
-            txtLog.Text += data;
-        }
 
         //Take a wifi snapshot, and log if indicated
         private void takeSnapshot()
@@ -393,53 +393,49 @@ namespace WITSniff
             {
                 Clock.Stop();
                 GPS.Stop();
+
                 gPSScanToolStripMenuItem.Text = "Start Recording";
                 scanStarted = false;
             }
             else
             {
-                if (Properties.Settings.Default.scanDelay.ToString() != string.Empty)
-                {
-                    startGPS();
-                    Clock = new System.Windows.Forms.Timer();
-                    Clock.Interval = int.Parse(Properties.Settings.Default.scanDelay.ToString());
-                    Clock.Start();
-                    Clock.Tick += new EventHandler(Timer_Tick);
-                    gPSScanToolStripMenuItem.Text = "Stop Recording";
-                    scanStarted = true;
-                }
-                else
-                    scanWifi();
+                startGPS();
+
+                Clock = new System.Windows.Forms.Timer();
+                Clock.Interval = int.Parse(Properties.Settings.Default.scanDelay.ToString());
+                Clock.Start();
+                Clock.Tick += new EventHandler(Timer_Tick);
+
+                gPSScanToolStripMenuItem.Text = "Stop Recording";
+                scanStarted = true;
             }
         }
 
         /// <summary>
-        /// Start GPS
+        /// Start the GPS
         /// </summary>
         private void startGPS()
         {
             if (!GPS.IsPortOpen)
             {
+                string messageText;
                 try
                 {
                     GPS.Start(Properties.Settings.Default.comPort, 4800);
+
+                    messageText = DateTime.Now + " - GPS: Scanner Started...\r\n";
                     startToolStripMenuItem.Text = "Stop";
-                    string messageText = DateTime.Now + " - GPS: Scanner Started...\r\n";
-                    if (txtLog.InvokeRequired)
-                        txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                        new object[] { messageText });
-                    else
-                        OutputUpdateCallback(messageText); //call directly
                 }
                 catch (Exception ex)
                 {
-                    string messageText = DateTime.Now + " - GPS: ERROR - " + ex.Message + "\r\n";
-                    if (txtLog.InvokeRequired)
-                        txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
-                        new object[] { messageText });
-                    else
-                        OutputUpdateCallback(messageText); //call directly
+                    messageText = DateTime.Now + " - GPS: ERROR - " + ex.Message + "\r\n";
                 }
+
+                if (txtLog.InvokeRequired)
+                    txtLog.Invoke(new updateMessageLog(OutputUpdateCallback),
+                    new object[] { messageText });
+                else
+                    OutputUpdateCallback(messageText); //call directly
             }
         }
 
@@ -635,51 +631,9 @@ namespace WITSniff
         }
         #endregion
 
-        #region Saving Buttons
-        /// <summary>
-        /// Send History hotspots to site
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnLogSendSite_Click(object sender, EventArgs e)
+        private void OutputUpdateCallback(string data)
         {
-            wifiMapper.saveListviewToSite(listView2);
-        }
-
-        /// <summary>
-        /// Send History hotspots to log
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnLogSendLog_Click(object sender, EventArgs e)
-        {
-            wifiMapper.saveListviewToLog(listView2);
-        }
-
-        /// <summary>
-        /// Send hotspots to site
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnSendSite_Click(object sender, EventArgs e)
-        {
-            wifiMapper.saveListviewToSite(listView1);
-        }
-
-        /// <summary>
-        /// Send hotspots to log
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnSendLog_Click(object sender, EventArgs e)
-        {
-            wifiMapper.saveListviewToLog(listView1);
-        }
-        #endregion
-
-        private void btnPushToSite_Click(object sender, EventArgs e)
-        {
-            wifiMapper.saveListviewToSite(listView2);
+            txtLog.Text += data;
         }
     }
 }

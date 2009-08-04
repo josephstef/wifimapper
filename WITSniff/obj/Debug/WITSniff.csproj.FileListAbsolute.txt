@@ -32,3 +32,25 @@ C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\bin\Debug\Interop.SpeechLib.dl
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\Wifi Mapper.TrustInfo.xml
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\Wifi Mapper.exe.manifest
 C:\Users\Lee\Desktop\Projects\wifiMapper\WITSniff\obj\Debug\Wifi Mapper.application
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\Wifi Mapper.exe.config
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\Interop.SpeechLib.dll
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.csproj.ResolveComReference.cache
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\Wifi Mapper.exe
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\Wifi Mapper.pdb
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.Form1.resources
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.frmAbout.resources
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.frmConfig.resources
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.frmSplash.resources
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.Properties.Resources.resources
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\WITSniff.csproj.GenerateResource.Cache
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\Wifi Mapper.exe.manifest
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\Wifi Mapper.application
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\Wifi Mapper.exe
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\Wifi Mapper.pdb
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\ManagedWifi.dll
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\SharpGps.dll
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\bin\Debug\Interop.SpeechLib.dll
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\Wifi Mapper.TrustInfo.xml
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\Wifi Mapper.exe.manifest
+C:\Users\Lee\Desktop\Projects\Wifi Mapper\WITSniff\obj\Debug\Wifi Mapper.application

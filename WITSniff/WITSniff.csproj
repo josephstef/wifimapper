@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E7A46662-CC9F-4AEA-910B-FFF37E551BD0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -162,6 +162,7 @@
   <ItemGroup>
     <Content Include="Resources\ManagedWifi.dll" />
     <Content Include="Resources\SharpGps.dll" />
+    <None Include="Resources\splash.png" />
     <Content Include="wifi.ico" />
     <Content Include="wifiMapper.ico" />
   </ItemGroup>
